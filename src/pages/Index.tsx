@@ -4,8 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useUser,UserButton } from "@civic/auth-web3/react";
 
 const Index = () => {
+  const { user, signIn, signOut } = useUser(); 
   const featuredEvents = [
     {
       id: 1,
@@ -58,9 +60,19 @@ const Index = () => {
                 Browse Events
               </Button>
             </Link>
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full px-6">
-              Login with Civic
-            </Button>
+
+            {!user ? (
+              <Button
+                onClick={() => signIn()}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full px-6"
+              >
+                Login with Civic
+              </Button>
+            ) : (
+              <div>
+      <UserButton style={{ minWidth: "20rem" }} dropdownButtonStyle={{ backgroundColor: "red" }} />
+    </div>
+            )}
           </div>
         </nav>
       </header>
@@ -77,12 +89,28 @@ const Index = () => {
             Create, discover, and attend events in the Web3 era. Earn exclusive NFT badges and connect with like-minded innovators.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
+          {!user ? (
+              <Button 
+              onClick={() => signIn()}
               size="lg" 
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full px-8 py-3 text-lg"
             >
-              🔐 Login with Civic
-            </Button>
+                🔐 Login with Civic
+              </Button>
+            ) : (
+              <Button
+                onClick={signOut}
+                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-full px-6"
+              >
+                Logout
+              </Button>
+            )}
+            {/* <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full px-8 py-3 text-lg"
+            >
+              
+            </Button> */}
             <Link to="/events">
               <Button 
                 size="lg" 
