@@ -1,19 +1,24 @@
-
+import { useUser } from "@civic/auth-web3/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Copy, ExternalLink, Calendar, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Profile = () => {
-  const userProfile = {
-    walletAddress: "0x742d35...5C98",
-    fullWalletAddress: "0x742d35Cc6C8965A8F7eFDeB60E63b58c5C98",
-    joinDate: "November 2024",
-    totalEvents: 12,
-    totalBadges: 8,
-    eventsHosted: 3
+  const { user, ethereum, solana } = useUser();
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyToClipboard = (address: string) => {
+    navigator.clipboard.writeText(address);
+    setCopied(address);
+    setTimeout(() => setCopied(null), 2000);
   };
+
+  if (!user) {
+    return <div className="p-6 text-center text-gray-600">User not logged in</div>;
+  }
 
   const nftBadges = [
     {
@@ -89,10 +94,11 @@ const Profile = () => {
     }
   ];
 
-  const copyWalletAddress = () => {
-    navigator.clipboard.writeText(userProfile.fullWalletAddress);
-    console.log("Wallet address copied to clipboard");
-  };
+  // Calculate dynamic stats
+  const earnedBadges = nftBadges.filter(badge => badge.status === "earned");
+  const totalBadges = earnedBadges.length;
+  const totalEvents = earnedBadges.length; // Assuming 1 badge per event attended
+  const eventsHosted = recentActivity.filter(activity => activity.type === "event_created").length;
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -155,33 +161,66 @@ const Profile = () => {
                 <div className="text-center mb-6">
                   <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <span className="text-3xl text-white font-bold">
-                      {userProfile.walletAddress.slice(2, 4).toUpperCase()}
+                      {ethereum?.address ? `${ethereum.address.slice(0, 2)}` : "??"}
                     </span>
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Web3 User</h2>
-                  <p className="text-sm text-gray-600">Member since {userProfile.joinDate}</p>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Welcome, {user.name}</h2>
+                  <p className="text-sm text-gray-600">Email: {user.email}</p>
                 </div>
 
-                {/* Wallet Address */}
-                <div className="mb-6">
+                {/* Ethereum Address */}
+                <div className="mb-4">
                   <label className="text-sm font-medium text-gray-700 block mb-2">
-                    Wallet Address
+                    Ethereum Address
                   </label>
                   <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl">
                     <code className="flex-1 text-sm font-mono text-gray-700">
-                      {userProfile.walletAddress}
+                      {ethereum?.address ? `${ethereum.address.slice(0, 6)}...${ethereum.address.slice(-4)}` : "Not connected"}
                     </code>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      onClick={copyWalletAddress}
-                      className="p-1 h-8 w-8"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="ghost" className="p-1 h-8 w-8">
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
+                    {ethereum?.address && (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => copyToClipboard(ethereum.address)}
+                          className="p-1 h-8 w-8"
+                          title={copied === ethereum.address ? "Copied!" : "Copy address"}
+                        >
+                          <Copy className={`w-4 h-4 ${copied === ethereum.address ? "text-green-600" : ""}`} />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="p-1 h-8 w-8" title="View on Etherscan">
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Solana Address */}
+                <div className="mb-6">
+                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                    Solana Address
+                  </label>
+                  <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl">
+                    <code className="flex-1 text-sm font-mono text-gray-700">
+                      {solana?.address ? `${solana.address.slice(0, 6)}...${solana.address.slice(-4)}` : "Not connected"}
+                    </code>
+                    {solana?.address && (
+                      <>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => copyToClipboard(solana.address)}
+                          className="p-1 h-8 w-8"
+                          title={copied === solana.address ? "Copied!" : "Copy address"}
+                        >
+                          <Copy className={`w-4 h-4 ${copied === solana.address ? "text-green-600" : ""}`} />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="p-1 h-8 w-8" title="View on Solscan">
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -189,15 +228,15 @@ const Profile = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
                     <span className="text-gray-600">Events Attended</span>
-                    <span className="font-semibold text-purple-700">{userProfile.totalEvents}</span>
+                    <span className="font-semibold text-purple-700">{totalEvents}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
                     <span className="text-gray-600">NFT Badges</span>
-                    <span className="font-semibold text-purple-700">{userProfile.totalBadges}</span>
+                    <span className="font-semibold text-purple-700">{totalBadges}</span>
                   </div>
                   <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl">
                     <span className="text-gray-600">Events Hosted</span>
-                    <span className="font-semibold text-purple-700">{userProfile.eventsHosted}</span>
+                    <span className="font-semibold text-purple-700">{eventsHosted}</span>
                   </div>
                 </div>
 
@@ -229,7 +268,7 @@ const Profile = () => {
                     NFT Badge Collection
                   </h3>
                   <Badge className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-0">
-                    {userProfile.totalBadges} Earned
+                    {totalBadges} Earned
                   </Badge>
                 </div>
                 
