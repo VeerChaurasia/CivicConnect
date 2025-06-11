@@ -12,7 +12,7 @@ import EventDetails from "./pages/EventDetails";
 import Profile from "./pages/Profile";
 import CheckIn from "./pages/CheckIn";
 import NotFound from "./pages/NotFound";
-
+import { EventProvider } from "./pages/EventContext";
 
 const queryClient = new QueryClient();
 
