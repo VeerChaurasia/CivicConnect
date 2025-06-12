@@ -8,7 +8,7 @@ import { Link, useParams } from "react-router-dom";
 const EventDetails = () => {
   const { id } = useParams();
   
-  // Mock event data - in real app this would come from API
+
   const event = {
     id: 1,
     title: "Web3 Developer Meetup",

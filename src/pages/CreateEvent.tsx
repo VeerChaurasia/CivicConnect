@@ -52,47 +52,54 @@ const CreateEvent = () => {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve((reader.result as string).split(",")[1]);
+      reader.onload = () => {
+        const base64 = (reader.result as string).split(",")[1];
+        console.log("✅ Base64 Output:", base64); // <-- Console log added here
+        resolve(base64);
+      };
       reader.onerror = reject;
     });
-
+  
   const compressImage = (file: File): Promise<File> =>
     new Promise((resolve) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d')!;
       const img = new Image();
-      
+  
       img.onload = () => {
-        // Resize image if too large
         const maxWidth = 800;
         const maxHeight = 600;
         let { width, height } = img;
-        
+  
         if (width > maxWidth || height > maxHeight) {
           const ratio = Math.min(maxWidth / width, maxHeight / height);
           width *= ratio;
           height *= ratio;
         }
-        
+  
         canvas.width = width;
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
-        
-        canvas.toBlob((blob) => {
+  
+        canvas.toBlob(async (blob) => {
           if (blob) {
             const compressedFile = new File([blob], file.name, {
               type: 'image/jpeg',
               lastModified: Date.now(),
             });
+  
+            // Convert to base64 here and log it
+            const base64 = await toBase64(compressedFile);
             resolve(compressedFile);
           } else {
             resolve(file);
           }
-        }, 'image/jpeg', 0.7); // 70% quality
+        }, 'image/jpeg', 0.7);
       };
-      
+  
       img.src = URL.createObjectURL(file);
     });
+  
 
   const deployToBlockchain = async () => {
     const { title, description, date, time, location, maxAttendees, imageFile } = formData;
