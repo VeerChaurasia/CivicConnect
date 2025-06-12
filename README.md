@@ -65,6 +65,18 @@ CivicConnect eliminates this friction by offering:
 
 Civic Auth is **not just a sign-in tool** — it's an all-in-one identity + wallet infrastructure layer for Web3 apps.
 
+
+✅ **What Civic Helps Solve**
+
+| **Friction Point**                             | **How Civic Solves It**                                               |
+|------------------------------------------------|------------------------------------------------------------------------|
+| Users don’t want to set up a wallet            | 🎉 Civic automatically provisions a secure embedded wallet             |
+| Users don’t understand gas & signing           | 🚫 No manual signing needed — everything handled silently              |
+| Events require manual check-ins or forms       | 🧾 Register with one click; NFT minted as proof-of-attendance          |
+| Developers must build auth + wallet infra      | 🧰 Civic provides a unified SDK for both auth and wallet               |
+
+
+
 ### 🔐 Authentication
 - OAuth-based login (Google, Discord, GitHub)
 - Session persistence, identity binding
