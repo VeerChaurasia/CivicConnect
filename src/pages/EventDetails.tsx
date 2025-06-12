@@ -11,18 +11,18 @@ const EventDetails = () => {
 
   const event = {
     id: 1,
-    title: "Web3 Developer Meetup",
-    date: "Dec 15, 2024",
+    title: "Solana Summit",
+    date: "June 20, 2025",
     time: "6:00 PM",
-    location: "TechHub SF",
-    address: "123 Tech Street, San Francisco, CA 94105",
+    location: "New Delhi",
+    address: "New Delhi",
     attendees: 124,
     maxAttendees: 200,
     badgePreview: "🎯",
     status: "upcoming",
     description: "Join fellow developers for an evening of networking, learning, and discussing the latest in Web3 technology. We'll have presentations on DeFi protocols, NFT marketplaces, and blockchain development best practices.",
-    rsvpStatus: "not-registered",
-    organizer: "Alex Chen",
+    rsvpStatus: "Registered",
+    organizer: "Raj Gokal",
     agenda: [
       { time: "6:00 PM", item: "Registration & Networking" },
       { time: "6:30 PM", item: "Welcome & Introductions" },
@@ -67,7 +67,7 @@ const EventDetails = () => {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                EventForge
+              CivicConnect
               </span>
             </Link>
             <div className="flex items-center space-x-4">
@@ -200,9 +200,7 @@ const EventDetails = () => {
                   <h3 className="text-xl font-semibold mb-4">About This Event</h3>
                   <div className="prose prose-gray max-w-none">
                     <p className="text-gray-600 mb-4">
-                      This Web3 Developer Meetup is designed for developers, entrepreneurs, and blockchain enthusiasts 
-                      who want to stay at the forefront of Web3 technology. Whether you're just starting your journey 
-                      or you're a seasoned developer, this event offers valuable insights and networking opportunities.
+                    Join us at the Solana Summit, the ultimate gathering for developers, creators, and innovators building on the Solana blockchain. Dive into the future of decentralized applications with expert talks, hands-on workshops, networking opportunities, and project showcases. Whether you're a seasoned builder or just curious about Web3, this summit is your gateway to the Solana ecosystem.
                     </p>
                     <p className="text-gray-600 mb-4">
                       We'll cover the latest developments in DeFi protocols, explore NFT marketplace architectures, 

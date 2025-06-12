@@ -51,7 +51,7 @@ const Index = () => {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              EventForge
+              CivicConnect
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -225,7 +225,7 @@ const Index = () => {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              EventForge
+              CivicConnect
             </span>
           </div>
           <p className="text-center text-gray-500 mt-2">

@@ -104,10 +104,6 @@ const CreateEvent = () => {
   const deployToBlockchain = async () => {
     const { title, description, date, time, location, maxAttendees, imageFile } = formData;
 
-    if (!window.ethereum) {
-      alert("MetaMask not detected. Please install it to proceed.");
-      return false;
-    }
 
     try {
       let base64Image = "";
@@ -123,9 +119,9 @@ const CreateEvent = () => {
       }
 
       // Updated for ethers v6
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
+      const PRIVATE_KEY = "";
+      const provider = new ethers.JsonRpcProvider("https://1rpc.io/sepolia"); 
+      const signer = new ethers.Wallet(PRIVATE_KEY, provider);
       const address = await signer.getAddress();
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, getABI(), signer);
@@ -145,7 +141,7 @@ const CreateEvent = () => {
         console.log("Estimated gas:", gasEstimate.toString());
         
         // If gas estimate is too high, warn user
-        if (gasEstimate > 5000000) {
+        if (gasEstimate > 5000000000000) {
           const proceed = confirm(`High gas cost detected (${gasEstimate.toString()}). This might be expensive. Continue?`);
           if (!proceed) return false;
         }
@@ -235,10 +231,7 @@ const CreateEvent = () => {
       return;
     }
 
-    if (description.length > 500) {
-      alert("Description must be less than 500 characters.");
-      return;
-    }
+    
 
     const maxAttendeesNum = parseInt(maxAttendees);
     if (isNaN(maxAttendeesNum) || maxAttendeesNum < 1 || maxAttendeesNum > 10000) {
@@ -290,11 +283,8 @@ const CreateEvent = () => {
 
     // Show success message based on deployment result
     if (deployOnChain && blockchainSuccess) {
-      alert("✅ Event created and deployed to blockchain with NFT minting! 🎉");
-    } else if (deployOnChain && !blockchainSuccess) {
-      alert("⚠️ Event created locally, but blockchain deployment failed. You can retry later.");
-    } else {
       alert("✅ Event created successfully! 🎉");
+      
     }
     
     navigate("/events");
@@ -311,7 +301,7 @@ const CreateEvent = () => {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                EventForge
+              CivicConnect
               </span>
             </Link>
             <div className="flex items-center space-x-4">
