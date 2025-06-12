@@ -87,8 +87,3 @@ Civic Auth is **not just a sign-in tool** — it's an all-in-one identity + wall
 - Wallet keys are managed by Civic’s secure wallet service
 - Users don’t need to know anything about seed phrases, gas, or wallet management
 
-### 🪙 NFT Minting
-- We mint ERC-721 tokens to the user’s Civic wallet address:
-```js
-const { wallet } = useCivic();
-const userAddress = await wallet?.getEthereumAddress();
