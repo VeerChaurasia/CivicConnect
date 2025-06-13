@@ -42,6 +42,7 @@ CivicConnect eliminates this friction by offering:
 | 🪪 Embedded Ethereum Wallet      | Secure, gasless wallet managed by Civic, bound to user identity            |                    |
 | 📝 One-Click Registration        | No wallet prompts, instant registration                                     |
 | 🧾 NFT Attendance Badges         | Unique NFTs minted as proof of attendance                                   |
+| 📱  Fully Responsive         | Works seamlessly across desktop and mobile devices             |
 | 🪙 Soulbound Tokens (Optional)   | NFTs are non-transferable, ensuring authenticity                            |
 | 🧭 Fully On-Chain                | All NFTs are minted on Sepolia Testnet for demo                            |
 | ☁️ Deployed on Vercel           | Publicly accessible link with Civic integration                            |
