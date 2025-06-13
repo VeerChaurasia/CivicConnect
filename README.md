@@ -2,6 +2,9 @@
 
 **CivicConnect** is a Web3-native event discovery platform where users can **explore upcoming blockchain events**, **sign in securely using Civic Auth**, and **receive on-chain NFT badges** as proof of participation — all without having to manage or connect an external wallet.
 ---
+☁️ Live App-[CivicConnect](https://civic-connect.vercel.app)
+
+
 
 ## 🚨 Problem
 
