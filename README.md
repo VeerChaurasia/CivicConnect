@@ -34,6 +34,20 @@ CivicConnect eliminates this friction by offering:
 
 ---
 
+## 🧵 User Flow Diagram
+
+```mermaid
+graph TD
+    A[User lands on CivicConnect] --> B[Signs in using Civic Auth]
+    B --> C[Civic provisions embedded wallet]
+    C --> D[User browses Web3 events]
+    D --> E[Registers for an event]
+    E --> F[NFT badge is minted]
+    F --> G[User views NFT in profile]
+```
+
+
+
 ## ✨ Key Features
 
 | Feature                           | Description                                                                 |
