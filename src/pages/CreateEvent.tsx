@@ -101,120 +101,66 @@ const CreateEvent = () => {
     });
   
 
-  const deployToBlockchain = async () => {
-    const { title, description, date, time, location, maxAttendees, imageFile } = formData;
-
-
-    try {
+    const deployToBlockchain = async () => {
+      const { title, description, date, time, location, maxAttendees, imageFile } = formData;
+    
       let base64Image = "";
       if (imageFile) {
         const compressedFile = await compressImage(imageFile);
         base64Image = await toBase64(compressedFile);
       }
-      
-      // Validate image size (limit to ~500KB base64)
-      if (base64Image && base64Image.length > 700000) {
-        alert("Image too large. Please use an image smaller than 500KB.");
-        return false;
-      }
-
-      // Updated for ethers v6
-      const PRIVATE_KEY = "";
-      const provider = new ethers.JsonRpcProvider("https://1rpc.io/sepolia"); 
-      const signer = new ethers.Wallet(PRIVATE_KEY, provider);
-      const address = await signer.getAddress();
-
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, getABI(), signer);
-
-      // Estimate gas first to catch issues early
+    
       try {
-        const gasEstimate = await contract.createEventAndMint.estimateGas(
-          address,
-          title,
-          description,
-          date,
-          time,
-          location,
-          parseInt(maxAttendees) || 1,
-          base64Image
-        );
-        console.log("Estimated gas:", gasEstimate.toString());
-        
-        // If gas estimate is too high, warn user
-        if (gasEstimate > 5000000000000) {
-          const proceed = confirm(`High gas cost detected (${gasEstimate.toString()}). This might be expensive. Continue?`);
-          if (!proceed) return false;
-        }
-      } catch (gasError) {
-        console.error("Gas estimation failed:", gasError);
-        
-        // Try to get more specific error info
-        try {
-          await contract.createEventAndMint.staticCall(
-            address,
+        console.log("🚀 Starting blockchain deployment...");
+        console.log("Event Data:", { title, description, date, time, location, maxAttendees });
+    
+        const response = await fetch("http://localhost:3000/api/create-event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
             title,
             description,
             date,
             time,
             location,
-            parseInt(maxAttendees) || 1,
-            base64Image
-          );
-        } catch (staticError) {
-          console.error("Static call error:", staticError);
-          alert(`Contract call would fail: ${staticError.message || 'Unknown error'}`);
+            maxAttendees: parseInt(maxAttendees),
+            base64Image,
+          }),
+        });
+    
+        const data = await response.json();
+        console.log("API Response:", data);
+        if (!data.txHash) {
+          console.warn("⚠️ txHash missing in response! Full response:", data);
+        }
+        
+    
+        if (response.ok && data.success) {
+          console.log("🎉 Blockchain deployment successful!");
+          console.log("📋 Transaction Details:");
+          console.log("  • Transaction Hash:", data.txHash);
+          
+          // Copy transaction hash to clipboard (optional)
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(data.txHash);
+            console.log("📋 Transaction hash copied to clipboard!");
+          }
+          
+          return true;
+        } else {
+          console.error("❌ Blockchain deployment failed:");
+          console.error("  • Error:", data.message || data);
+          console.error("  • Full response:", data);
           return false;
         }
-        
-        throw new Error("Transaction would fail. Please check your inputs or contract state.");
+      } catch (err) {
+        console.error("💥 Deployment error:");
+        console.error("  • Error message:", err.message);
+        console.error("  • Full error:", err);
+        return false;
       }
-
-      console.log("Transaction parameters:", {
-        address,
-        title,
-        description,
-        date,
-        time,
-        location,
-        maxAttendees: parseInt(maxAttendees) || 1,
-        imageLength: base64Image.length
-      });
-
-      // Execute transaction with increased gas limit
-      const tx = await contract.createEventAndMint(
-        address,
-        title,
-        description,
-        date,
-        time,
-        location,
-        parseInt(maxAttendees) || 1,
-        base64Image,
-        {
-          gasLimit: Math.min(10000000, Math.floor(Number(await contract.createEventAndMint.estimateGas(
-            address,
-            title,
-            description,
-            date,
-            time,
-            location,
-            parseInt(maxAttendees) || 1,
-            base64Image
-          )) * 1.2)), // 20% buffer
-        }
-      );
-
-      console.log("Transaction sent:", tx.hash);
-      const receipt = await tx.wait();
-      console.log("Transaction receipt:", receipt);
-
-      return true;
-    } catch (error) {
-      console.error("Error creating event on blockchain:", error);
-      alert("❌ Failed to deploy event to blockchain. Event will be saved locally.");
-      return false;
-    }
-  };
+    };
+    
 
   const handleSubmit = async () => {
     const { title, description, date, time, location, maxAttendees } = formData;

@@ -18,10 +18,6 @@ const CheckIn = () => {
   const [mintingStatus, setMintingStatus] = useState("");
   const [transactionHash, setTransactionHash] = useState("");
 
-  // Contract configuration
-  const PRIVATE_KEY = "";
-  const provider = new ethers.JsonRpcProvider("https://eth-sepolia.public.blastapi.io"); 
-  const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
   const CONTRACT_ADDRESS = "0xB0Ee4A25b92E52011E8388FD56943B8B8A3Aa5cF"; 
   const getABI = () => {
@@ -40,20 +36,32 @@ const CheckIn = () => {
   const mintNFTOnChain = async (userAddress: string, eventId: number) => {
     setIsMinting(true);
     try {
-      setMintingStatus("Connecting to wallet...");
-      if (!ethereum) throw new Error("Wallet connection required");
-
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, getABI(), signer);
-
-      setMintingStatus("Sending mint transaction...");
-      const tx = await contract.mintExistingEventNFT(eventId, userAddress);
-      console.log("Transaction sent, tx hash:", tx.hash);
-      setMintingStatus("Transaction sent, waiting for confirmation...");
-      const receipt = await tx.wait();
-
+      setMintingStatus("Contacting backend to mint NFT...");
+  
+      const res = await fetch("http://localhost:3000/api/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userAddress, eventId }),
+      });
+  
+      let responseText = await res.text();
+  
+      // Attempt to parse JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error("Raw response not valid JSON:", responseText);
+        throw new Error(`Invalid JSON response from server`);
+      }
+  
+      if (!res.ok) {
+        throw new Error(data?.error || "Backend returned an error");
+      }
+  
       setMintingStatus("NFT minted successfully!");
-      setTransactionHash(receipt.transactionHash);
-      return receipt.transactionHash;
+      setTransactionHash(data.txHash);
+      return data.txHash;
     } catch (err: any) {
       console.error("Minting error:", err);
       setMintingStatus(`Mint failed: ${err.message}`);
@@ -62,13 +70,16 @@ const CheckIn = () => {
       setIsMinting(false);
     }
   };
+  
+  
+  
 
   const handleCodeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (checkInCode.toLowerCase() === "solana") {
       const eventData = {
-        eventId: 3,  // <-- set the appropriate event ID here
+        eventId: 8,  // <-- set the appropriate event ID here
         title: "Solana Summit",
         description: "Exclusive NFT badge for Web3 Developer Meetup attendees",
         date: "June 20, 2025",
