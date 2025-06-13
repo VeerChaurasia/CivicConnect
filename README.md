@@ -34,6 +34,20 @@ CivicConnect eliminates this friction by offering:
 
 ---
 
+## 🧵 User Flow Diagram
+
+```mermaid
+graph TD
+    A[User lands on CivicConnect] --> B[Signs in using Civic Auth]
+    B --> C[Civic provisions embedded wallet]
+    C --> D[User browses Web3 events]
+    D --> E[Registers for an event]
+    E --> F[NFT badge is minted]
+    F --> G[User views NFT in profile]
+```
+
+
+
 ## ✨ Key Features
 
 | Feature                           | Description                                                                 |
@@ -42,6 +56,7 @@ CivicConnect eliminates this friction by offering:
 | 🪪 Embedded Ethereum Wallet      | Secure, gasless wallet managed by Civic, bound to user identity            |                    |
 | 📝 One-Click Registration        | No wallet prompts, instant registration                                     |
 | 🧾 NFT Attendance Badges         | Unique NFTs minted as proof of attendance                                   |
+| 📱  Fully Responsive         | Works seamlessly across desktop and mobile devices             |
 | 🪙 Soulbound Tokens (Optional)   | NFTs are non-transferable, ensuring authenticity                            |
 | 🧭 Fully On-Chain                | All NFTs are minted on Sepolia Testnet for demo                            |
 | ☁️ Deployed on Vercel           | Publicly accessible link with Civic integration                            |
