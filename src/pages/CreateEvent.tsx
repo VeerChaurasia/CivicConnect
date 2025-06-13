@@ -114,7 +114,7 @@ const CreateEvent = () => {
         console.log("🚀 Starting blockchain deployment...");
         console.log("Event Data:", { title, description, date, time, location, maxAttendees });
     
-        const response = await fetch("http://localhost:3000/api/create-event", {
+        const response = await fetch("https://civicconnect-mhy7.onrender.com/api/create-event", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

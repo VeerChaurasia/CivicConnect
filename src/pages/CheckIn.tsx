@@ -38,7 +38,7 @@ const CheckIn = () => {
     try {
       setMintingStatus("Contacting backend to mint NFT...");
   
-      const res = await fetch("http://localhost:3000/api/checkin", {
+      const res = await fetch("https://civicconnect-mhy7.onrender.com/api/checkin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userAddress, eventId }),
